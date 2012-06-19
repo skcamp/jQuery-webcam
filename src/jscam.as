@@ -57,7 +57,7 @@ class JSCam {
 			// http://www.adobe.com/support/flash/action_scripts/actionscript_dictionary/actionscript_dictionary133.html
 			camera.onStatus = function(info:Object) {
 
-			    switch (info.code) {
+		    switch (info.code) {
 			    case 'Camera.Muted':
 				ExternalInterface.call('webcam.debug', "notify", "Camera stopped");
 				break;
@@ -68,7 +68,9 @@ class JSCam {
 			}
 
 			camera.setQuality(0, 100);
-			camera.setMode(Stage.width, Stage.height, 24, false);
+      // camera.setMode(Stage.width, Stage.height, 24, true);
+      // NB - force 640x480 to get the correct aspect ratio with c310
+			camera.setMode(640, 480, 24);
 
 			ExternalInterface.addCallback("capture", null, capture);
 
@@ -147,13 +149,15 @@ class JSCam {
 		if (0 <= id && id < Camera.names.length) {
 			camera = Camera.get(id);
 			camera.setQuality(0, 100);
-			camera.setMode(Stage.width, Stage.height, 24, false);
+      // camera.setMode(Stage.width, Stage.height, 24, false);
+      // NB - force 640x480 to get the correct aspect ratio with c310
+			camera.setMode(640, 480, 24, true);
 
-                        _root.removeMovieClip();
-                        _root.attachMovie("clip", "video", 1);
-                        _root.video.attachVideo(camera);
-                        _root.video._x = 0;
-                        _root.video._y = 0;
+      _root.removeMovieClip();
+      _root.attachMovie("clip", "video", 1);
+      _root.video.attachVideo(camera);
+      _root.video._x = 0;
+      _root.video._y = 0;
 
 			return true;
 
@@ -196,7 +200,7 @@ class JSCam {
 
 					var doc = new XML();
 					doc.onLoad = function(success) {
-                        ExternalInterface.call("webcam.onSave", "done", this.toString());
+            ExternalInterface.call("webcam.onSave", "done", this.toString());
 					}
 
 					sal.sendAndLoad(file, doc);
